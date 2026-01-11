@@ -1,0 +1,193 @@
+\documentclass[a4paper,11pt]{article}
+
+% -----------------------
+% Korean (KoTeX)
+% -----------------------
+\usepackage{kotex}
+\usepackage[left=1.5cm, right=1.5cm, top=2cm, bottom=2cm]{geometry}
+% -----------------------
+% Math & Physics
+% -----------------------
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{physics}   % \ket{}, \bra{}, \braket{}
+\usepackage{bbm}       % \mathbbm{1}
+\usepackage{parskip}
+% -----------------------
+% Graphics
+% -----------------------
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+% -----------------------
+% Theorem environments
+% -----------------------
+\theoremstyle{definition}
+\newtheorem{definition}{정의}[section]
+
+\theoremstyle{plain}
+\newtheorem{theorem}{정리}[section]
+
+\theoremstyle{remark}
+\newtheorem{remark}{비고}[section]
+
+\setcounter{secnumdepth}{0}
+% -----------------------
+% Title info
+% -----------------------
+\title{Quantum Information \& Computation\\Summary note}
+\author{문진혁}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\newpage
+\section{Overview}
+해당 문서는 Quantum Information \& Computation 을 공부하기 위해서 만들어 졌으며, 기본적인 순서는 IBM Quantum Information \& Computation Course 를 따라갈 것이다.
+
+
+해당 코스는 \url{https://quantum.cloud.ibm.com/learning/en/courses} 이며 해당 노트도 코스에 맞춰서 작성할 예정이다. 
+
+추가적인 내용과 미흡한 개념 같은 경우에는 추가로 \href{https://product.kyobobook.co.kr/detail/S000061863518}{양자계산과 양자정보(Nielsen Michael , Chuang, Isaac L.)} 라는 책의 내용을 인용할 것이다. 
+
+
+
+\section{Course 1. Basic of Quantum Information}
+
+\subsection{Classical information}
+
+probability vector
+\begin{itemize}
+	\item All entries are non negative real numbers (모든 entry는 음수가 아니어야 한다)
+	\item The sum of the entries is 1. (모든 entry의 합은 항상 1이다)
+\end{itemize}
+
+
+\textbf{Dirac notation}
+
+$\Sigma$를 classical state set이라고 한다면, 각 원소들의 위치에 대해서 다음 처럼 대응 시킬 수 있다.
+
+$\ket{a}$ 은 column vector 이며, $\Sigma$에서 $a$ 와 상응되는 벡터이다. 
+
+예시를 들면 $\{0,1\}$ 에서, $\ket{0} = \begin{pmatrix}
+	1 \\ 0
+\end{pmatrix}$ 라고 표현할수 있다. 
+
+
+그리고 위에서 예시로 든 vector를 standard basis vector라고 한다. 그리고 모든 vector들은 이 standard basis vector의 Linear combination으로 나타낼 수 있다. 
+
+추후에도 나오겠지만 해당 Dirac notation은 inner product와 outer product에 대해서도 비교적 간단하게 나타낼 수 있고, 각각이 의미하는 바에 대해서는 나중에 설명하게 된다. 간단하게 정리하면 outer product 형태는 해당 quantum Information에서 Operator와 같은 의미를 가진다.
+
+
+\textbf{Measure}
+
+어떤 확률 상태에서 system X를 측정한다면 어떻게 될지를 알아본다.
+classical state 에서는 여러 상태중에 하나가 측정되게 될것이다. 
+
+간단하게 생각해보면 주사위의 각 면이 나올 확률은 모두 1/6이 된다. 
+$$\frac{1}{6}\ket{1}+\frac{1}{6}\ket{2}+\frac{1}{6}\ket{3}+\frac{1}{6}\ket{4}+\frac{1}{6}\ket{5}+\frac{1}{6}\ket{6}$$
+
+다음은 이 주사위의 각 면이 나올 확률을 probability vector로 나타낸 것이다. 보면 알겠지만 각 vector의 entry는 해당 상태가 나올 확률임을 알 수 있다.
+
+\textbf{Probabilistic operations}
+
+Probabilistic operation은 classical operator로, 다음과 같은 성질을 띄게 된다.
+\begin{itemize}
+	\item All entries are nonnegative real numbers
+	\item The entries in every column sum to 1 (각각의 column에서의 entry의 합은 1이다)
+	\item 다음과 같은 형태가 예시이다. $\begin{pmatrix}
+		1 & 1/2 \\ 0 & 1/2
+	\end{pmatrix}$
+\end{itemize}
+위에서 나온 operation은 stochastic matrix 라고도 불리며, 각 column의 row는 출력 확률을 나타낸다. 즉, 위의 예시는 다음 의미를 가진다. 현재 상태가 0인 경우에, 그대로이며, 만약 상태가 1이라면, 0.5의 확률로 bit flip이 일어난다는 뜻이다.
+
+\textbf{Composing operations}
+
+composing operation이란 여러개의 operations을 하나의 연산으로 묶는 것을 의미하며, 각 연산들은 matrix product로 이루어진다. 이때 먼저 한 연산이 나중 연산보다 오른쪽에 존재한다.
+
+Classical Operation에서는 stochastic matrix 의 matrix product로 이루어지게 된다. 
+이때, product의 순서에 따라 결과값이 달라지게 되고, 이를 Not Commutative 하다고 한다.
+
+\subsection{Quantum information}
+
+지금까지 Classical Information을 알아봤다면 이제 Quantum State로 넘어가게 된다.
+
+Quantum State도 Classical Information처럼 해당 System도 Column Vector 로 표현이 가능하고 다음과 같은 성질을 띄게 된다.
+\begin{itemize}
+	\item The entries are complex numbers (각 Entry는 복소수이다)
+	\item The sum of the absolute values squared of the entries must equal 1 (각 Entry의 절댓값의 제곱의 합은 항상 1이다)
+\end{itemize}
+
+고전 상태에서는 그냥 entry의 합이 1이였지만, 양자 상태에서는 절댓값의 제곱의 합이 1임이 다르기에 계산에 주의하여야 한다.
+
+그리고 complex number로 구성된 vector의 Euclidean norm 표기 방법은 각 원소의 절댓값 제곱의 합에 루트를 씌운 형태이다.
+ 이는 이후에 unit vector를 정의할때 꼭 필요하다.
+\[
+\|\mathbf{v}\|_2
+=
+\sqrt{\sum_{i=1}^n |v_i|^2}
+\]
+
+
+\textbf{dagger}
+고전 상태에서의 vector는 모두 real number entry이다. 하지만, 양자 상태에서의 vector는 complex number entry이므로, 만약 column vector를 row vector로 바꿀려면 transpose를 한 후에 켤레를 취해야한다. 이 일련의 과정을 $\dagger$를 통해서 나타낸다. $$\bra{\psi} = \ket{\psi}^\dagger$$
+
+
+\textbf{Measuring quantum states}
+
+양자상태에서 측정을 하게 되면 고전 상태로 출력이 되게 된다. ( 양자역학에서 배우는 관측을 하면 값이 정해진다와 같은 맥락이다)
+그리고 그 확률은 절댓값의 제곱과 같다.
+
+이때 중요한 점은 복소수에서 절댓값의 제곱을 계산할때, 계산법을 혼동하면 안된다는 점이다. (이 점은 수학 서적의 복소수 파트를 확인한다)
+
+
+그리고 앞으로 이 요약노트에서는 $\ket{0}$을 측정하면 0이 나오고, $\ket{1}$을 측정하면 1이 나온다고 할것이다.
+
+\textbf{Unitary operations}
+
+이제부터 고전 상태와 양자상태의 큰 특징이 드러나는 operation들이 나오기 시작한다. 그중 가장 중요한 operation은 unitary operation 으로 다음과 같은 특징을 가진다.
+\begin{itemize}
+	\item $U^\dagger U = \bold{I} , UU^\dagger$ 
+\end{itemize}
+하나 알수 있는건 unitary operation은 어떤 단위원 위에서 vector를 이동 시킨다. 이 말은 즉, $\|U\mathbf{v}\| = \|\mathbf{v}\|$ 임을 알 수 있다. 
+
+아까 위에서 나온 unitary의 특징을 보면 결국 $U$의 inverse matrix가 $U^\dagger$임을 알 수 있다. 즉 어떤 양자상태의 vector에 대해서 unitary operation을 취한 뒤에 다시 원래 상태로 즉 inverse matrix를 적용시킬 수 있다는 것을 알 수 있다. 
+
+
+\textbf{Qubit unitary operations}
+이제 양자 상태에서 사용되는 기본적인 unitary operation을 설명한다.
+
+\begin{itemize}
+	\item $\sigma_x = \begin{pmatrix}
+		0 & 1 \\ 1 & 0
+	\end{pmatrix}$ 은 bit flip gate로 $\ket{0} \rightarrow \ket{1}$ 같이 bit를 뒤집는다. (NOT GATE와 동일)
+	\item $\sigma_y = \begin{pmatrix}
+		0 & -i \\ i & 0
+	\end{pmatrix}$ 은 bit를 뒤집지는 않지만 phase를 바꾸는 operation이다.
+	\item $\sigma_y = \begin{pmatrix}
+		1 & 0 \\ 0 & -1
+	\end{pmatrix}$ 은 phase flip gate로 $\ket{1} \rightarrow -\ket{1}$ 와 같이 1인 경우의 phase를 뒤집는다.	
+	\item $ H = \frac{1}{\sqrt{2}}\begin{pmatrix}
+		1 & 1 \\ 1 & -1
+	\end{pmatrix}$ 은 basis를 변환시키는 gate로 $\ket{0} \rightarrow \frac{\ket{0}+\ket{1}}{\sqrt{2}} = \ket{+}$ 처럼 작동한다. 이는 0과 1이 나올 확률을 절반으로 바꾸거나, 그 반대에서 사용하기도 하며, 나중에 bell state를 만들 때에도 사용한다.
+	\item $P_\theta = \begin{pmatrix}
+		1 & 0 \\ 0 & e^{i\theta}
+	\end{pmatrix}$ 는 phase operation으로, $\theta$ 만큼 phase를 rotate 시킨다. 이때, 파생적으로 S 는 $\theta = \pi/2$ 일때이고, T 는 $\theta = \pi/4$ 일때이다.
+
+\end{itemize}
+
+
+
+
+
+
+
+
+\end{document}
