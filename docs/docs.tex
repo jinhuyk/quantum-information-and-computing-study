@@ -61,7 +61,8 @@
 
 \section{Course 1. Basic of Quantum Information}
 
-\subsection{Classical information}
+\subsection{Single Systems}
+\subsubsection{Classical information}
 
 probability vector
 \begin{itemize}
@@ -115,7 +116,7 @@ composing operation이란 여러개의 operations을 하나의 연산으로 묶�
 Classical Operation에서는 stochastic matrix 의 matrix product로 이루어지게 된다. 
 이때, product의 순서에 따라 결과값이 달라지게 되고, 이를 Not Commutative 하다고 한다.
 
-\subsection{Quantum information}
+\subsubsection{Quantum information}
 
 지금까지 Classical Information을 알아봤다면 이제 Quantum State로 넘어가게 된다.
 
@@ -182,6 +183,97 @@ Quantum State도 Classical Information처럼 해당 System도 Column Vector 로 
 	\end{pmatrix}$ 는 phase operation으로, $\theta$ 만큼 phase를 rotate 시킨다. 이때, 파생적으로 S 는 $\theta = \pi/2$ 일때이고, T 는 $\theta = \pi/4$ 일때이다.
 
 \end{itemize}
+
+
+
+\newpage
+\subsection{Multiple Systems}
+이 단원부터는 두개 이상의 State를 다루게 된다.
+\subsubsection{Classical States}
+n개의 system이 있다면 우리는 n-tuple형태의 cartesian product 로 나타낼 수 있다.
+\begin{itemize}
+	\item 해당 n-tuple형태를 간단히 string 형태로 표현이 가능하다.
+	\item 해당 state sets의 순서는 lexicographical order를 따른다.
+	\item 이 lexicographical order로 probabilistic states를 나타낼 수 있다.
+\end{itemize}
+
+\textbf{Probabilistic states}
+
+위에서 나온 single system처럼 multiple system도 똑같이 probabilistic vector를 나타낼 수 있다.
+$\begin{pmatrix}
+	0.5 \\ 0 \\ 0 \\ 0.5
+\end{pmatrix}$는 00 상태가 나올 확률이 0.5, 11 상태가 나올 확률이 0.5임을 나타낸다.
+
+\textbf{tensor Product}
+
+tensor product는 2개의 column vector를 하나의 vector로 만드는 연산이다. 다양한 표현방법이 있으며 여기에서는 생략한다.
+
+\textbf{Mesurements of probabilistic states}
+
+이 probabilistic state를 측정하는 방법은 위도 말했던 것처럼 각 상태의 entry가 해당 상태가 나올 확률이 된다.
+$\frac{1}{2}\ket{00} + \frac{1}{2}\ket{11}$은 측정 시에 00이 나올 확률은 .5 이고, 11이 나올 확률은 .5 임을 나타낸다.
+
+그러면 만약 (X,Y)가 있는 probabilistic state에서 X를 측정하고, Y는 아무것도 하지 않는다면 어떤 일이 발생할까? 
+
+이에 대해서는 고등학교 수학에서 배운 조건부확률을 사용하면 되는데, X가 측정된 즉, X가 확정된 상태에서 Y=a일 확률을 구해주면 된다. 이는 전체 X=a,Y=b가 될 확률에서 X=a가 될 확률로 나누어주면 된다.
+
+그럼 일단 tensor product로 이루어진 probabilistic state를 분리 시켜, X와 Y를 명확히 나누어준다. (Independent하기 때문에 가능하다)
+그리고 X = a 이 나올 확률을 구해주고, 해당 $\ket{a}$ 와 tensor product된 부분을 해당 확률로 나누어 주면 된다.
+
+
+\textbf{Controlled-NOT}
+
+controlled not operation은 2 state 상태에서 사용이 가능하며, X가 1이면, Y는 NOT Operation 적용, X가 0이면 그대로 Y로 납두는 Operation이다.
+
+이때 X는 control bit라 부르고, Y는 target bit라고 부른다.
+
+\subsubsection{Quantum states}
+
+Multiple system에서 quantum state vector는 column vector로 낱타내며, Cartesian product를 각각의 system에 대해서 한 형태이다. 
+$$\{0,1\} \times \{0,1\} = \{00,01,10,11\}$$
+
+Tensor product로 이루어진 quantum state vector도 quantum state vector인데, 이때 이 벡터의 상태는 product states 즉, 중첩된 상태라고 불린다. 그리고 이 상태는 독립적이므로, 각 system들은 서로에게 간섭하지 않는다. 
+
+
+이에 반하여, product 상태가 아닌 quantum state vector도 있다.
+
+$$\frac{1}{\sqrt{2}}\ket{00} + \frac{1}{\sqrt{2}}\ket{11}$$
+이 경우가 그런 경우인데, 증명은 contradiction을 사용하여 증명한다.
+
+이러한 벡터들중 하나는 Bell states / Bell basis라고 불린다.
+
+이런 것들은 모두 tensor product로 분해할수 없다는 특징을 가진다. 
+
+\textbf{Measurements}
+
+quantum state에서의 측정은 원하는 상태의 bra 형태를 내적하여 나타낼 수 있고, 그 결과로 해당 상태가 나올 확률을 구할 수 있다.
+
+만약 $a_1 ... a_n$이라는 상태가 나올 확률을 측정하고 싶다면, $|\braket{a_1...a_n}{\psi}|^2$ 으로 확률을 구할 수 있다.
+
+
+
+그러면 (X,Y) 가 있는 quantum state에서 X를 측정하고, Y는 가만히 두면 어떻게 될까?
+
+여기에서 붕괴 (collapse)라는 개념이 나오게 되는데, 붕괴란 새로운 상태로 바뀌게 되는 것을 의미한다.
+
+XY가 Tensor Product라면은 사실상 두 상태는 독립적이기 때문에 X가 측정이 되어도 Y는 상태가 바뀌지 않는다.
+
+하지만 entangle 상태라면 두 상태는 얽혀있어서 X가 측정되는 순간 Y는 붕괴가 되어 새로운 확률을 얻게 된다. (조건부)
+
+\textbf{unitary operations}
+
+unitary operation들도 모두 tensor product를 통해서 multiple system operation으로 바뀔 수 있다.
+
+대표적으로는 \textbf{SWAP GATE}가 있는데 (X,Y)의 한 상태를 (Y,X)로 교환 시키는 연산이다. 
+
+$$\text{SWAP} = \sum_{a,b \in \Sigma} \ket{a}\bra{b} \otimes \ket{b}\bra{a}, SWAP\ket{\phi \otimes \psi} = \ket{\psi \otimes \phi } $$
+
+또한 이런 tensor product를 아용하여 controlled-U 라는 operation을 만들수 있다. 마찬가지로 control bit에 대해서 target bit가 U operation을 취하는 것이다. 기본적으로 controlled-NOT Operation도 해당 형태이다.
+
+
+예시로는 controlled-SWAP opeation (on three qubits) 는 Fredkin operation이라고도 불리며, control bit에 따라 나머지 2개의 bit가 swap하는 형태이다.
+
+다른 예시로는 controlled-controlled-NOT operation으로 Toffoli operation이라고도 불리며, 2개의 control bit를 가지고, 해당 비트가 모두 11 인 경우에 target bit가 NOT operation을 수행하는 형식이다.
 
 
 
