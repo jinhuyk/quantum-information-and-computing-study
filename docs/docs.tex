@@ -58,7 +58,7 @@
 추가적인 내용과 미흡한 개념 같은 경우에는 추가로 \href{https://product.kyobobook.co.kr/detail/S000061863518}{양자계산과 양자정보(Nielsen Michael , Chuang, Isaac L.)} 라는 책의 내용을 인용할 것이다. 
 
 
-
+\newpage
 \section{Course 1. Basic of Quantum Information}
 
 \subsection{Single Systems}
@@ -277,9 +277,94 @@ $$\text{SWAP} = \sum_{a,b \in \Sigma} \ket{a}\bra{b} \otimes \ket{b}\bra{a}, SWA
 
 
 
+\newpage
+
+\subsection{Quantum Circuits}
+Quantum Circuit이란 qubits와 gate들이 연결된 모델을 의미 하며, 각 Operation들의 곱으로 이루어져있다.
+
+이미 이전 chapter에서 여러가지 single gate, Controlled-NOT, Swap gate, Toffoligate, Fredkin gate 등 여러가지 operation을 알아보았고, 이제 이 operation들의 적절한 곱 연산을 통해 새로운 operation을 만들고, 각 qubit에 연결하여 Quantum Circuit을 만들어 볼 수 있다.
+
+\textbf{Projection Mesurements}
+
+Projection은 2가지 성질을 가지고 있다.
+\begin{itemize}
+	\item $\Pi = \Pi ^\dagger$ 이는 Hermitian 성질로, 항상 기댓값이 실수임을 나타낸다.
+	\item $\Pi ^2 = \Pi $ 이는 이미 Projection Measure을 했다면, 그 값은 여러번 연산을 적용해도 바뀌지 않는다는 것을 나타낸다.
+\end{itemize}
+모든 Projection matrix $\Pi$는 다음처럼 정의된다. $$\Pi = \Sigma_{k=1}^{m}\ket{\psi_k}\bra{\psi_k}, \sum\Pi_k = I$$
+이때 사용되는 $\psi_k$는 orthonormal set이다.
+
+그러면 이 projection을 사용하면 어떤일이 일어날까?
+
+$\ket{\psi}$ 를 측정한다고 하면, outcome k는 다음 확률로 측정이 될것이다.
+$$\text{Pr}(outcome = k) = \|\Pi_k\ket{\psi}\|^2 = \bra{\psi}\Pi_k\ket{\psi}$$
+
+그리고 이렇게 측정된 시스템의 상태는 다음처럼 붕괴될 것이다.
+$$\frac{\Pi_k\ket{\psi}}{\|\Pi_k\ket{\psi}\|}$$
+
+또한 만약 2개의 시스템인경우 ,(X,Y) 인 경우에, X만 측정하고, Y는 아무것도 안했다고 한다면, 우리는 다음처럼 projective measurement를 표현해볼 수 있다. $\ket{a}\bra{a} \otimes 1_Y$
+
+그리고 모든 projective measurements는 unitary operation과 standared basis measurements를 사용하여 구현할 수 있다. 
+
+
+\textbf{Irrelevance of global phases}
+
+$|\phi\rangle = \alpha |\psi\rangle,\quad |\alpha|=1$ 을 만족하면, 둘의 phase가 다르다고 한다.
+하지만 둘의 phase가 다르다고 해서 측정 확률이 달라진다거나 하지 않는다. 이 global phases는 측정이 되는 순간 의미가 없어지기 때문이다.
+$$\Pr(a \mid |\phi\rangle)
+= |\langle a|\phi\rangle|^2
+= |\langle a| e^{i\theta}|\psi\rangle|^2
+= |e^{i\theta}|^2 |\langle a|\psi\rangle|^2
+= |\langle a|\psi\rangle|^2$$
+
+그래서 위상만 다른 두 벡터들은 결국 어떤 연산을 해도 같고, 양자정보에서는 각각의 벡터가 아닌 하나의 상태에 대한 동치류로 판단한다.
 
 
 
+\textbf{No - cloning theorem}
 
+이부분은 양자정보에서 중요한 파트 중 하나이다. 상태는 복제할수 없다는 의미이다.
+임의의 양자 상태에서 $|\psi\rangle \otimes |0\rangle \mapsto |\psi\rangle \otimes |\psi\rangle$을 만족하는 Unitary 연산은 존재하지 않는다는 것이다. 이는 양자역학의 선형성과도 이루어지는 문제이다. 중첩 상태에서는 연산은 각 상태에서 각각 이루어지는 것이 아닌, 전체 상태에 대해서 일어나는 것이기 때문이다. 
+
+기저 상태에서는 CNOT 게이트를 얽힘을 이용하여 cloning과 같은 효과를 낼 수 있다. 이는 control bit와 target bit의 상관관계를 이용하여 상태를 정하는 것 뿐이다.
+
+\textbf{Discriminationg non-orthogonal states}
+
+고전 상태에서는 물체가 다른상태이면 구별이 가능하다. 예를 들면 동전과같은 경우이다. 하지만 양자역학에서는 직교상태가 아닌 이상 비직교 상태에서는 정확히 구별이 불가능하다. 그 이유는 비직교 상태에서는 이걸 구별할수 있는 measurement가 존재하지 않기 때문이다. 이미 비직교 상태는 예를 들면 두 직교성분을 가지고 있기 때문에, 측정을 하게 되면 100\% 확률로 구별이 불가능하다. 
+
+
+\subsubsection{Entanglement in Action}
+
+\textbf{Quantum Teleportation}
+
+Alice는 Bob에게 어떤 qubit을 전송하고 싶어 한다. 이때 이 전송을 하기 위해서는 Alice는 Classical infromation만 전송이 가능하다.
+(No-Cloning theorem) 때문에 qubit 자체를 복사할수 없기 때문이다.
+
+그래서 이 Teleportation을 하기 위해 Alice와 Bob은 공통적으로 e-bit을 공유함을 전제로 시작한다.
+
+\begin{enumerate}
+	\item Alice는 controlled-NOT gate를 구현한다. (Q는 control, A (e-bit)은 target)
+	\item Alice는 Q에 Hadamard operation을 적용한다.
+	\item Alice는 A와 Q를 측정하고, outcome a,b를 얻게 된다.
+	\item Alice 는 a와 b를 Bob에게 보낸다.
+	\item Bob은 두개의 step을 수행하는데, 만약 a = 1이면 B (e-bit)에 X-Gate를 적용한다, 만약 b = 1이면 B에 Z게이트를 적용한다.
+	\end{enumerate}
+	
+이 protocol을 통하면 최종적으로 Bob의 qubit B는 Q와 같은 상태를 지니게 된다. 
+
+그러면 이론적으로 매우 먼 거리에서도 서로 공통 e-bit를 가지고 있다면 teleportation이 가능하다. 하지만 이는 결국 고전적인 한계에 막히게 되는데, 외냐하면 어떻게 classic information인 a,b를 보낼 것인가이다.
+
+\textbf{superdense coding}
+
+Alice는 bob에게 2개의 classical bit을 전송하고 싶어한다.
+그래서 Alice는 하나의 single qubit을 보낼것이고, Alice와 Bob은 e-bit을 공유한다.
+
+\begin{enumerate}
+	\item Alice는 A(e-bit)에 b를 control로 가지는 Z gate와 a를 control로 가지는 x gate를 적용시킨 후, Bob에게 전송한다.
+	\item Bob은 A에 따라 B에 CNOT 연산을 하고, A는 H gate를 적용 시킨 후 측정을 하고, B도 측정을 한다.
+	\item B는 측정결과로 a를, A는 측정 결과로 b를 얻게 된다.
+\end{enumerate}
+
+superdense coding도 마찬가지로 Alice의 qubit A를 Bob에게 전송시켜야 하기 때문에 고전적인 한계에 막히게 된다.
 
 \end{document}
